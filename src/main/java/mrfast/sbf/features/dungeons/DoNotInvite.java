@@ -4,6 +4,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import mrfast.sbf.SkyblockFeatures;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -15,8 +17,8 @@ public class DoNotInvite {
     boolean debug = true;
 
     //Data things
-TZPFileHandler fileHandler = new TZPFileHandler();
-JsonObject DNI = fileHandler.loadDNI();
+    TZPFileHandler fileHandler = new TZPFileHandler();
+    JsonObject DNI = fileHandler.loadDNI();
 
 }
 
@@ -29,6 +31,9 @@ class TZPFileHandler{
 public JsonObject loadDNI(){
 return loadData(DNIFile);
 }
+public void saveDNI(JsonObject DNI){saveData(DNI, DNIFile);}
+
+// Load/Save things.
 private JsonObject loadData(File dataFile){
 try{
     String read = new String(Files.readAllBytes(Paths.get(dataFile.getPath())));
@@ -38,5 +43,12 @@ catch (Exception e){
     e.printStackTrace();
     return  null;
 }
+}
+private void saveData(JsonObject data, File dataFile) {
+    String saveThis = data.getAsString();
+    try (FileWriter writer = new FileWriter(dataFile)) {
+        writer.write(saveThis);
+    }
+    catch (Exception ignored){}
 }
 }
