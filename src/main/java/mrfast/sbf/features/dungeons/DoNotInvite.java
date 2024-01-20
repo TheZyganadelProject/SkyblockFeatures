@@ -3,6 +3,9 @@ package mrfast.sbf.features.dungeons;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import mrfast.sbf.SkyblockFeatures;
+import mrfast.sbf.utils.Utils;
+import net.minecraftforge.client.event.ClientChatReceivedEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -17,7 +20,6 @@ public class DoNotInvite {
     boolean active = true;
     // Use a debug boolean to enable debug features.
     boolean debug = true;
-
 
     //Data things
     TZPFileHandler fileHandler = new TZPFileHandler();
@@ -57,9 +59,20 @@ public class DoNotInvite {
         return true;
     }
 
+    // Remove the named clown from the list.
     void RemoveClown(String name){
         DNI.remove(name);
         fileHandler.saveDNI(DNI);
+    }
+
+    @SubscribeEvent
+    public void onChat(ClientChatReceivedEvent event){
+        String noFormat = event.message.getUnformattedText();
+        String pfCheck = "> ";
+
+        if(debug){
+            Utils.sendMessage("Input string is length: " + noFormat.length());
+        }
     }
 }
 
