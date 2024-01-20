@@ -24,6 +24,7 @@ public class DoNotInvite {
     JsonObject config;
     JsonObject DNI = fileHandler.loadDNI();
 
+    // This will add a clown to the list.
     void AddClown(String name){
         // First, get the time.
         Date date = Date.from(Instant.now());
@@ -33,7 +34,28 @@ public class DoNotInvite {
         long clownDuration = config.get("clownDuration").getAsLong();
         expiryTime += clownDuration;
 
+        // Finally, add the clown to the list.
         DNI.addProperty(name, expiryTime);
+    }
+
+    // Check if someone is on the list, return true if they are.
+    boolean CheckUser(String name){
+        if(!DNI.has(name)){return false;} // don't continue if clown doesn't exist.
+
+        // Get noteworthy times.
+        long now = Date.from(Instant.now()).getTime();
+        long expiry = DNI.get(name).getAsLong();
+
+        // If expiry has passed, yeet the listing out the window.
+        if(now > expiry){
+            DNI.remove(name);
+            fileHandler.saveDNI(DNI);
+
+            return false;
+        }
+
+        // If nothing else catches, return true and bonk the user.
+        return true;
     }
 }
 
