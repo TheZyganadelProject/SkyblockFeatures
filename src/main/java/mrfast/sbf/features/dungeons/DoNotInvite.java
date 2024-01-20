@@ -65,13 +65,34 @@ public class DoNotInvite {
         fileHandler.saveDNI(DNI);
     }
 
+    void pKick(String name){
+        // Attempt to /p kick here.
+    }
+
     @SubscribeEvent
     public void onChat(ClientChatReceivedEvent event){
         String noFormat = event.message.getUnformattedText();
-        String pfCheck = "> ";
+        String ign = "";
 
-        if(debug){
+        // Define join messages
+        String pfCheck = "Party Finder > ";
+        String joinCheck = " ";
+
+        boolean chatDebug = false;
+        if(chatDebug){
             Utils.sendMessage("Input string is length: " + noFormat.length());
+        }
+
+        int length = noFormat.length();
+
+        // Check for join messages
+        if(noFormat.contains(pfCheck)){
+            // Get the ign by taking the substring from these positions.
+            int endLoc = noFormat.indexOf(" joined the");
+            int startLoc = 15;
+            ign = noFormat.substring(startLoc,endLoc);
+
+            if(CheckUser(ign)){pKick(ign);}
         }
     }
 }
