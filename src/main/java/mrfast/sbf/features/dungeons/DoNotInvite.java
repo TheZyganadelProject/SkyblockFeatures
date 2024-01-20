@@ -23,12 +23,12 @@ public class DoNotInvite {
     boolean debug = true;
 
     //Data things
-    TZPFileHandler fileHandler = new TZPFileHandler();
-    JsonObject config;
-    JsonObject DNI = fileHandler.loadDNI();
+    static TZPFileHandler fileHandler = new TZPFileHandler();
+    static JsonObject config;
+    static JsonObject DNI = fileHandler.loadDNI();
 
     // This will add a clown to the list.
-    void AddClown(String name){
+    public void AddClown(String name){
         // First, get the time.
         Date date = Date.from(Instant.now());
 
@@ -42,7 +42,7 @@ public class DoNotInvite {
     }
 
     // Check if someone is on the list, return true if they are.
-    boolean CheckUser(String name){
+    public boolean CheckUser(String name){
         if(!DNI.has(name)){return false;} // don't continue if clown doesn't exist.
 
         // Get noteworthy times.
@@ -61,12 +61,12 @@ public class DoNotInvite {
     }
 
     // Remove the named clown from the list.
-    void RemoveClown(String name){
+    public void RemoveClown(String name){
         DNI.remove(name);
         fileHandler.saveDNI(DNI);
     }
 
-    void pKick(String name){
+    public void pKick(String name){
         // Attempt to /p kick here.
     }
 
