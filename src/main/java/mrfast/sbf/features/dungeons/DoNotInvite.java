@@ -76,7 +76,7 @@ public class DoNotInvite {
 
         // Define join messages
         String pfCheck = "Party Finder > ";
-        String joinCheck = " ";
+        String joinCheck = "joined the party.";
 
         boolean chatDebug = false;
         if(chatDebug){
@@ -94,6 +94,7 @@ public class DoNotInvite {
 
             //Debug
             if(debug){Utils.sendMessage("Detected player " + ign);}
+            if(CheckUser(ign)){pKick(ign);}
         }
         if(noFormat.contains(joinCheck)){
             // again get ign, but we know 0 is startloc.
@@ -101,8 +102,9 @@ public class DoNotInvite {
             ign = noFormat.substring(0,endLoc);
 
             if(debug){Utils.sendMessage("Detected player " + ign);}
+            if(CheckUser(ign)){pKick(ign);}
         }
-        if(CheckUser(ign)){pKick(ign);}
+
     }
 }
 
@@ -124,18 +126,18 @@ class TZPFileHandler{
 
     // Load/Save things.
     private JsonObject loadData(File dataFile){
-try{
-    String read = new String(Files.readAllBytes(Paths.get(dataFile.getPath())));
-    return new JsonParser().parse(read).getAsJsonObject();
-}
-catch (Exception e){
-    e.printStackTrace();
-    return  null;
-}
-}
+        try{
+        String read = new String(Files.readAllBytes(Paths.get(dataFile.getPath())));
+        return new JsonParser().parse(read).getAsJsonObject();
+    }
+    catch (Exception e){
+        e.printStackTrace();
+        return  null;
+    }
+    }
     private void saveData(JsonObject data, File dataFile) {
-    String saveThis = data.getAsString();
-    try (FileWriter writer = new FileWriter(dataFile)) {
+        String saveThis = data.getAsString();
+        try (FileWriter writer = new FileWriter(dataFile)) {
         writer.write(saveThis);
     }
     catch (Exception ignored){}
