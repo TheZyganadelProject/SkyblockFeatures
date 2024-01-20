@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Instant;
@@ -132,6 +133,12 @@ class TZPFileHandler{
     }
     catch (Exception e){
         e.printStackTrace();
+        // Attempt to create files if it tries to brick.
+        try{
+            TZPDir.mkdir();
+            DNIFile.createNewFile();
+            configFile.createNewFile();
+        }catch (Exception ignored){}
         return  null;
     }
     }
