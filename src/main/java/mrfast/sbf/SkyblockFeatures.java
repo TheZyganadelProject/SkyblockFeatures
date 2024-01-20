@@ -189,7 +189,8 @@ public class SkyblockFeatures {
                 new CollectionOverlay(),
                 new RenderFeatures(),
                 new FireFreezeTimer(),
-                new BestiaryHelper()
+                new BestiaryHelper(),
+                new DoNotInvite()
         );
         features.forEach(MinecraftForge.EVENT_BUS::register);
         // Checks mod folder for version of Skyblock Features your using
