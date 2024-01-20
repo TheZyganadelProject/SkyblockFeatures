@@ -48,14 +48,18 @@ public class DoNotInvite {
 
         // If expiry has passed, yeet the listing out the window.
         if(now > expiry){
-            DNI.remove(name);
-            fileHandler.saveDNI(DNI);
+            RemoveClown(name);
 
             return false;
         }
 
         // If nothing else catches, return true and bonk the user.
         return true;
+    }
+
+    void RemoveClown(String name){
+        DNI.remove(name);
+        fileHandler.saveDNI(DNI);
     }
 }
 
