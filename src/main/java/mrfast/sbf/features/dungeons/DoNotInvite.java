@@ -91,9 +91,13 @@ public class DoNotInvite {
             int endLoc = noFormat.indexOf(" joined the");
             int startLoc = 15;
             ign = noFormat.substring(startLoc,endLoc);
-
-            if(CheckUser(ign)){pKick(ign);}
         }
+        if(noFormat.contains(joinCheck)){
+            // again get ign, but we know 0 is startloc.
+            int endLoc = noFormat.indexOf(" joined the");
+            ign = noFormat.substring(0,endLoc);
+        }
+        if(CheckUser(ign)){pKick(ign);}
     }
 }
 
