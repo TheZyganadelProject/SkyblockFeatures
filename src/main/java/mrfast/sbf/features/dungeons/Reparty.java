@@ -17,8 +17,10 @@ public class Reparty {
     private String partyLeader= null;
     private long startTime = 0;
 
-    private boolean isPartyLeader = false;
+    public static boolean isPartyLeader = false;
     private final List<String> memberList = new ArrayList<>();
+
+    public static List<String> exportableMemberList = new ArrayList<>();
     private static long lastRepartyTime = 0;
     private boolean lookingForLine = false;
 
@@ -50,6 +52,7 @@ public class Reparty {
             if (message.contains("Party Leader:")) {
                 memberList.clear();
                 String partyLeader = extractPartyLeader(message);
+                exportableMemberList.add(partyLeader);
                 isPartyLeader = partyLeader.contains(Utils.GetMC().thePlayer.getName());
             }
             if (isPartyLeader && message.contains("Party Moderators:")) {
@@ -60,6 +63,16 @@ public class Reparty {
                 memberList.addAll(extractMemberNames(message));
                 lookingForLine = true;
             }
+            //Exportable things
+            if (message.contains("Party Moderators:")){
+                memberList.addAll(extractMemberNames(message));
+                lookingForLine = true;
+            }
+            if (message.contains("Party Members:")){
+                memberList.addAll(extractMemberNames(message));
+                lookingForLine = true;
+            }
+
             if(lookingForLine && message.equals("-----------------------------------------------------")) {
                 Utils.setTimeout(()->{
                     Utils.GetMC().thePlayer.sendChatMessage("/p disband");
@@ -130,4 +143,17 @@ public class Reparty {
         lastRepartyTime = System.currentTimeMillis();
     }
 
+    public static List<String> getPartyMembers(){
+        // First, get party list.
+        return exportableMemberList;
+    }
+
+    public static boolean isPartyLeader(){
+
+        return isPartyLeader;
+    }
+
+    public static void checkParty(){
+        Utils.GetMC().thePlayer.sendChatMessage("/p list");
+    }
 }

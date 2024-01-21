@@ -1,6 +1,7 @@
 package mrfast.sbf.commands;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
+import mrfast.sbf.SkyblockFeatures;
 import mrfast.sbf.features.dungeons.DoNotInvite;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.command.CommandBase;
@@ -35,7 +36,15 @@ public class DoNotInviteCommands extends CommandBase {
         switch (args[0]) {
             case "add":
                 if (!dni.CheckUser(ign)) {
-                    dni.AddClown(ign);
+                    int duration = 0;
+                    if (args.length > 2){
+                        try{
+                            duration = Integer.parseInt(args[2].replaceAll("[^0-9]",""));
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                    dni.AddClown(ign, duration);
                     Utils.sendMessage("Added clown " + ign + " to the list.");
                 }
                 break;
@@ -57,6 +66,10 @@ public class DoNotInviteCommands extends CommandBase {
                 break;
 
             // I should add a scanparty option soon.
+            case"scanparty":
+                if(SkyblockFeatures.config.enableDNI){
+
+                }
 
             default:
                 Utils.sendMessage(ChatFormatting.RED + "Invalid action! Valid actions: \"add\", \"del\", \"remove\", \"check\"");

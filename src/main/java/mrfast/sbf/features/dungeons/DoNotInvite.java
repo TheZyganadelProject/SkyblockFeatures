@@ -7,8 +7,12 @@ import mrfast.sbf.utils.Utils;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.List;
+
 import java.time.Instant;
 import java.util.Date;
+
+import static mrfast.sbf.features.dungeons.Reparty.*;
 
 public class DoNotInvite {
 
@@ -27,12 +31,12 @@ public class DoNotInvite {
     }
 
     // This will add a clown to the list.
-    public void AddClown(String name) {
+    public void AddClown(String name, int customDuration) {
         // First, get the time.
         Date date = Date.from(Instant.now());
 
         // Set the expiry time.
-        long expiryTime = getClownDuration(0) + date.getTime();
+        long expiryTime = getClownDuration(customDuration) + System.currentTimeMillis();
 
         // Finally, add the clown to the list.
         DNI.addProperty(name, expiryTime);
@@ -58,10 +62,6 @@ public class DoNotInvite {
         long now = Date.from(Instant.now()).getTime();
         long expiry = DNI.get(name).getAsLong();
 
-        if (debug) {
-            Utils.sendMessage("test");
-        }
-
         // If expiry has passed, yeet the listing out the window.
         if (now > expiry) {
             RemoveClown(name);
@@ -79,12 +79,33 @@ public class DoNotInvite {
         DataManager.saveData("DNI", DNI);
     }
 
-    public void pKick(String name) {
-        // Attempt to /p kick here.
-        if (active) {
-            // check if we can pkick, then pkick if able.
+    public void ScanParty(){
+        if(SkyblockFeatures.config.enableDNI){
+            List<String> pList = getPartyMembers();
 
+            Utils.setTimeout(()->{
+                // Loop through pList, kicking any clowns.
+                for (String pMember : pList) {
+                    if(CheckUser(pMember)){
+                        pKick(pMember, false);
+                    }
+                }
+            }, 200);
         }
+    }
+
+    public void pKick(String name, boolean doPCheck) {
+        // Check the party if we need to.
+        if(doPCheck){checkParty();}
+        // Check if we're lead.
+        Utils.setTimeout(()->{
+        if(isPartyLeader()){
+            Utils.GetMC().thePlayer.sendChatMessage("/p kick " + name);
+        }
+        }, 200);
+    }
+    public void pKick(String name){
+        pKick(name, true);
     }
 
     @SubscribeEvent
@@ -101,7 +122,7 @@ public class DoNotInvite {
             Utils.sendMessage("Input string is length: " + noFormat.length());
         }
 
-        int length = noFormat.length();
+
 
         // Check for join messages
         if (noFormat.contains(pfCheck)) {
