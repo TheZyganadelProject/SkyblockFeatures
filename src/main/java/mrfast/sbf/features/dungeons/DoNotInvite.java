@@ -1,16 +1,12 @@
 package mrfast.sbf.features.dungeons;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import mrfast.sbf.SkyblockFeatures;
+import mrfast.sbf.core.DataManager;
 import mrfast.sbf.utils.Utils;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.Instant;
 import java.util.Date;
 
@@ -21,10 +17,14 @@ public class DoNotInvite {
     // Use a debug boolean to enable debug features.
     boolean debug = true;
 
-    //Data things
-    static TZPFileHandler fileHandler = new TZPFileHandler();
-    static JsonObject config = fileHandler.loadConfig();
-    static JsonObject DNI = fileHandler.loadDNI();
+
+    static JsonObject DNI = new JsonObject();
+
+    static {
+        if (DataManager.dataJson.has("dniList")) {
+            DNI = (JsonObject) DataManager.getData("dniList");
+        }
+    }
 
     // This will add a clown to the list.
     public void AddClown(String name) {
@@ -32,12 +32,20 @@ public class DoNotInvite {
         Date date = Date.from(Instant.now());
 
         // Set the expiry time.
-        long expiryTime = date.getTime();
-        long clownDuration = config.get("clownDuration").getAsLong();
-        expiryTime += clownDuration;
+        long expiryTime = getClownDuration(0) + date.getTime();
 
         // Finally, add the clown to the list.
         DNI.addProperty(name, expiryTime);
+        DataManager.saveData("dniList", DNI);
+    }
+
+    private static long getClownDuration(int customDuration) {
+        // do custom duration things
+        int days = SkyblockFeatures.config.DNIexpiry;
+        if (customDuration != 0){days = customDuration;}
+
+        long duration = (long)days * 24 * 60 * 60 * 1000;
+        return duration;
     }
 
     // Check if someone is on the list, return true if they are.
@@ -50,8 +58,8 @@ public class DoNotInvite {
         long now = Date.from(Instant.now()).getTime();
         long expiry = DNI.get(name).getAsLong();
 
-        if(debug){
-            //Utils.sendMessage(expiry);
+        if (debug) {
+            Utils.sendMessage("test");
         }
 
         // If expiry has passed, yeet the listing out the window.
@@ -68,7 +76,7 @@ public class DoNotInvite {
     // Remove the named clown from the list.
     public void RemoveClown(String name) {
         DNI.remove(name);
-        fileHandler.saveDNI(DNI);
+        DataManager.saveData("DNI", DNI);
     }
 
     public void pKick(String name) {
@@ -127,57 +135,4 @@ public class DoNotInvite {
 }
 
 // Hide data bs behind another class because I don't want to look at this bs unless I absolutely have to.
-class TZPFileHandler {
-    // The following should be a temporary file management system until a proper one can be created.
-    File TZPDir = new File(SkyblockFeatures.modDir, "TZP");
-    File DNIFile = new File(TZPDir, "doNotInvite.json");
-    File configFile = new File(TZPDir, "config.json");
 
-    // DNI things
-    public JsonObject loadDNI() {
-        return loadData(DNIFile);
-    }
-
-    public void saveDNI(JsonObject DNI) {
-        saveData(DNI, DNIFile);
-    }
-
-    // Config things
-    public JsonObject loadConfig() {
-        return loadData(configFile);
-    }
-
-    public void saveConfig(JsonObject config) {
-        saveData(config, configFile);
-    }
-
-    // Load/Save things.
-    private JsonObject loadData(File dataFile) {
-        try {
-            String read = new String(Files.readAllBytes(Paths.get(dataFile.getPath())));
-            if (new JsonParser().parse(read).getAsJsonObject() == null) {
-                return new JsonObject();
-            } else {
-                return new JsonParser().parse(read).getAsJsonObject();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            // Attempt to create files if it tries to brick.
-            try {
-                TZPDir.mkdir();
-                DNIFile.createNewFile();
-                configFile.createNewFile();
-            } catch (Exception ignored) {
-            }
-            return new JsonObject();
-        }
-    }
-
-    private void saveData(JsonObject data, File dataFile) {
-        String saveThis = data.getAsString();
-        try (FileWriter writer = new FileWriter(dataFile)) {
-            writer.write(saveThis);
-        } catch (Exception ignored) {
-        }
-    }
-}

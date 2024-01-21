@@ -746,6 +746,29 @@ public class Config extends ConfigManager {
     )
     public boolean SecretsDisplay = true;
 
+    // Do not invite things
+    @Property(
+            type = PropertyType.TOGGLE,
+            name = "Do Not Invite",
+            category = "§1§rDungeons",
+            subcategory = "Party Finder",
+            description = "Removes unwanted players from the party.",
+            isParent = true
+    )
+    public boolean enableDNI = false;
+
+    @Property(
+            type = PropertyType.NUMBER,
+            name = "DNI listing duration",
+            category = "§1§rDungeons",
+            subcategory = "Party Finder",
+            parentName = "Do Not Invite",
+            description = "Time until player can rejoin the party in days.",
+            min = 1,
+            max = 90
+    )
+    public int DNIexpiry = 14;
+
     @Property(
             type = PropertyType.TOGGLE,
             name = "Better Party Finder Menu",
@@ -755,6 +778,7 @@ public class Config extends ConfigManager {
             isParent = true
     )
     public boolean betterPartyFinder = false;
+    
     @Property(
             type = PropertyType.TOGGLE,
             name = "Side Menu",
@@ -2592,6 +2616,8 @@ public class Config extends ConfigManager {
             parentName = "Highlight Selected Bestiary Mobs"
     )
     public String trackedBestiaryMobs = "";
+
+    
 
     @Property(
             type = PropertyType.BUTTON,
