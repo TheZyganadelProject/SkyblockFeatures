@@ -46,6 +46,7 @@ public class DoNotInviteCommands extends CommandBase {
                 String falseMessage = "User " + ign + " is not on the DNI list.";
                 if(dni.CheckUser(ign)){Utils.sendMessage(trueMessage);}
                 else{Utils.sendMessage(falseMessage);}
+                break;
 
                 // I should add a scanparty option soon.
 
