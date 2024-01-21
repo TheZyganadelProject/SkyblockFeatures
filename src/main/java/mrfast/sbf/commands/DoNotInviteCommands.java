@@ -67,9 +67,7 @@ public class DoNotInviteCommands extends CommandBase {
 
             // I should add a scanparty option soon.
             case"scanparty":
-                if(SkyblockFeatures.config.enableDNI){
-
-                }
+                dni.ScanParty();
 
             default:
                 Utils.sendMessage(ChatFormatting.RED + "Invalid action! Valid actions: \"add\", \"del\", \"remove\", \"check\"");

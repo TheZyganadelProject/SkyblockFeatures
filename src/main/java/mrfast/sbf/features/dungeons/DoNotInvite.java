@@ -83,14 +83,17 @@ public class DoNotInvite {
         if(SkyblockFeatures.config.enableDNI){
             List<String> pList = getPartyMembers();
 
+            // set int that will be added to, so that clowns are pkicked every 200 ms.
+            final int[] i = {200};
             Utils.setTimeout(()->{
                 // Loop through pList, kicking any clowns.
                 for (String pMember : pList) {
                     if(CheckUser(pMember)){
                         pKick(pMember, false);
+                        i[0] += 200;
                     }
                 }
-            }, 200);
+            }, i[0]);
         }
     }
 
