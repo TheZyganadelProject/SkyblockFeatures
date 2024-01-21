@@ -19,38 +19,47 @@ public class DoNotInviteCommands extends CommandBase {
     public String getCommandUsage(ICommandSender sender) {
         return "/" + getCommandName();
     }
+
     @Override
     public int getRequiredPermissionLevel() {
         return 0;
     }
 
     @Override
-    public void processCommand(ICommandSender sender, String[] args){
-        if(args.length < 2){
-            Utils.sendMessage(ChatFormatting.RED+"Missing arguments! Usage: /dni <action> <username>");
+    public void processCommand(ICommandSender sender, String[] args) {
+        if (args.length < 2) {
+            Utils.sendMessage(ChatFormatting.RED + "Missing arguments! Usage: /dni <action> <username>");
             return;
         }
         String ign = args[1];
-        switch (args[0]){
-            case"add":
-                if(!dni.CheckUser(ign)){dni.AddClown(ign);
-                    Utils.sendMessage("Added clown " + ign + " to the list.");}
+        switch (args[0]) {
+            case "add":
+                if (!dni.CheckUser(ign)) {
+                    dni.AddClown(ign);
+                    Utils.sendMessage("Added clown " + ign + " to the list.");
+                }
                 break;
-            case"del":
-            case"remove":
-                if(!dni.CheckUser(ign)){dni.RemoveClown(ign);
-                    Utils.sendMessage("Removed clown " + ign + " from the list.");}
+            case "del":
+            case "remove":
+                if (!dni.CheckUser(ign)) {
+                    dni.RemoveClown(ign);
+                    Utils.sendMessage("Removed clown " + ign + " from the list.");
+                }
                 break;
-            case"check":
+            case "check":
                 String trueMessage = "User " + ign + " is on the DNI list.";
                 String falseMessage = "User " + ign + " is not on the DNI list.";
-                if(dni.CheckUser(ign)){Utils.sendMessage(trueMessage);}
-                else{Utils.sendMessage(falseMessage);}
+                if (dni.CheckUser(ign)) {
+                    Utils.sendMessage(trueMessage);
+                } else {
+                    Utils.sendMessage(falseMessage);
+                }
                 break;
 
-                // I should add a scanparty option soon.
+            // I should add a scanparty option soon.
 
-            default: Utils.sendMessage(ChatFormatting.RED+"Invalid action! Valid actions: \"add\", \"del\", \"remove\", \"check\"");
+            default:
+                Utils.sendMessage(ChatFormatting.RED + "Invalid action! Valid actions: \"add\", \"del\", \"remove\", \"check\"");
         }
     }
 }
