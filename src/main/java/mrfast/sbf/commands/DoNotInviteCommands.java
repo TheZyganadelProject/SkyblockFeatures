@@ -29,7 +29,7 @@ public class DoNotInviteCommands extends CommandBase {
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
         if (args.length < 2) {
-            Utils.sendMessage(ChatFormatting.RED + "Missing arguments! Usage: /dni <action> <username>");
+            Utils.sendMessage(ChatFormatting.RED + "Missing arguments. Usage: /dni <action> <username>");
             return;
         }
         String ign = args[1];
