@@ -9,7 +9,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Instant;
@@ -24,7 +23,7 @@ public class DoNotInvite {
 
     //Data things
     static TZPFileHandler fileHandler = new TZPFileHandler();
-    static JsonObject config;
+    static JsonObject config = fileHandler.loadConfig();
     static JsonObject DNI = fileHandler.loadDNI();
 
     // This will add a clown to the list.
@@ -68,12 +67,16 @@ public class DoNotInvite {
 
     public void pKick(String name){
         // Attempt to /p kick here.
+        if(active){
+            // check if we can pkick, then pkick if able.
+
+        }
     }
 
     @SubscribeEvent
     public void onChat(ClientChatReceivedEvent event){
         String noFormat = event.message.getUnformattedText();
-        String ign = "";
+        String ign;
 
         // Define join messages
         String pfCheck = "Party Finder > ";
@@ -129,7 +132,9 @@ class TZPFileHandler{
     private JsonObject loadData(File dataFile){
         try{
         String read = new String(Files.readAllBytes(Paths.get(dataFile.getPath())));
-        return new JsonParser().parse(read).getAsJsonObject();
+        if(new JsonParser().parse(read).getAsJsonObject() == null){return new JsonObject();}
+        else{
+        return new JsonParser().parse(read).getAsJsonObject();}
     }
     catch (Exception e){
         e.printStackTrace();
@@ -139,7 +144,7 @@ class TZPFileHandler{
             DNIFile.createNewFile();
             configFile.createNewFile();
         }catch (Exception ignored){}
-        return  null;
+        return new JsonObject();
     }
     }
     private void saveData(JsonObject data, File dataFile) {

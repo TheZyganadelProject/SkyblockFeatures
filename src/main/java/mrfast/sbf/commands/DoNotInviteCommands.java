@@ -4,7 +4,6 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.sbf.features.dungeons.DoNotInvite;
 import mrfast.sbf.utils.Utils;
 import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 
 public class DoNotInviteCommands extends CommandBase {
@@ -20,9 +19,13 @@ public class DoNotInviteCommands extends CommandBase {
     public String getCommandUsage(ICommandSender sender) {
         return "/" + getCommandName();
     }
+    @Override
+    public int getRequiredPermissionLevel() {
+        return 0;
+    }
 
     @Override
-    public void processCommand(ICommandSender sender, String[] args) throws CommandException {
+    public void processCommand(ICommandSender sender, String[] args){
         if(args.length < 2){
             Utils.sendMessage(ChatFormatting.RED+"Missing arguments! Usage: /dni <action> <username>");
             return;
@@ -30,19 +33,22 @@ public class DoNotInviteCommands extends CommandBase {
         String ign = args[1];
         switch (args[0]){
             case"add":
-                if(!dni.CheckUser(ign)){dni.AddClown(ign);}
+                if(!dni.CheckUser(ign)){dni.AddClown(ign);
+                    Utils.sendMessage("Added clown " + ign + " to the list.");}
                 break;
             case"del":
             case"remove":
-                if(!dni.CheckUser(ign)){dni.RemoveClown(ign);}
-                // removal code here
+                if(!dni.CheckUser(ign)){dni.RemoveClown(ign);
+                    Utils.sendMessage("Removed clown " + ign + " from the list.");}
                 break;
             case"check":
                 String trueMessage = "User " + ign + " is on the DNI list.";
                 String falseMessage = "User " + ign + " is not on the DNI list.";
                 if(dni.CheckUser(ign)){Utils.sendMessage(trueMessage);}
                 else{Utils.sendMessage(falseMessage);}
-                // check here
+
+                // I should add a scanparty option soon.
+
             default: Utils.sendMessage(ChatFormatting.RED+"Invalid action! Valid actions: \"add\", \"del\", \"remove\", \"check\"");
         }
     }

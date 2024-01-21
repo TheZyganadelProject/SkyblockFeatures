@@ -259,6 +259,7 @@ public class SkyblockFeatures {
         commands.add(new PingCommand());
         commands.add(new FakePlayerCommand());
         commands.add(new pvCommand());
+        commands.add(new DoNotInviteCommands());
         if (Utils.isDeveloper()) {
             commands.add(new ColorTestCommand());
         }
